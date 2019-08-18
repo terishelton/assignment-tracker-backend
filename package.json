@@ -4,7 +4,8 @@
   "description": "Assignment Tracker backend - final project for JSCRIPT 400",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon app.js",
+    "reset-db": "node ./db/seeds"
   },
   "author": "Teri Shelton",
   "devDependencies": {
