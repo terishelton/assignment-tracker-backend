@@ -1,7 +1,8 @@
 const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 const Assignment = require('./assignment')
 
-const schema = mongoose.Schema({
+const schema = new Schema({
     email: {
         type: String,
         required: true,

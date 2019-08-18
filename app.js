@@ -6,7 +6,7 @@ const mongoose = require('mongoose')
 
 // Set up DB connection
 if (MONGO_DB_CONNECTION) {
-    mongoose.connect(MONGO_DB_CONNECTION, { useNewUrlParser: true, useFindAndModify: false })
+    mongoose.connect(MONGO_DB_CONNECTION, { useNewUrlParser: true, useFindAndModify: false, useCreateIndex: true })
     console.log('Connected to database...')
 } else {
     console.log('Could not connect to the database!')
@@ -22,7 +22,11 @@ app.use(cors({
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }))
 
+// Attach token to request
+app.use(require('./api/middleware/get-token'))
+
 // Routes
+app.use('/api', require('./api/routes/auth')) // login and signup
 
 // Not Found Handler
 app.use((req, res, next) => {
