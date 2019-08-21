@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const User = require('../models/user')
-const { isLoggedIn, isSameUser } = require('../middleware/auth')
+const { isLoggedIn, isSameUser, isAdmin } = require('../middleware/auth')
 
 // get all students (not all users!)
 router.get('/', isLoggedIn, async (req, res, next) => {

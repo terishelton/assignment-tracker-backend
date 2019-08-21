@@ -1,4 +1,5 @@
 const { decodeToken } = require('../lib/token')
+const User = require('../models/user')
 
 const isLoggedIn = (req, _res, next) => {
     if (!req.token) {
@@ -28,4 +29,15 @@ const isSameUser = (req, _res, next) => {
     next(error)
 }
 
-module.exports = { isLoggedIn, isSameUser }
+const isAdmin = async (req, _res, next) => {
+    const token = decodeToken(req.token)
+    const id = token.id
+    const adminUser = await User.findById(id).select('-__v -password')
+    if (adminUser.admin === true) return next()
+  
+    const error = new Error('You need to be an admin to access this route.')
+    error.status = 401
+    next(error)
+}
+
+module.exports = { isLoggedIn, isSameUser, isAdmin }

@@ -2,7 +2,8 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const Assignment = require('./assignment')
 
-const schema = new Schema({
+const personSchema = Schema({
+    _id: Schema.Types.ObjectId,
     email: {
         type: String,
         required: true,
@@ -24,11 +25,11 @@ const schema = new Schema({
         type: Boolean,
         required: true
     },
-    assignment: [Assignment],
+    assignment: [Assignment]
 },
     { 
         timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } 
     }
 )
 
-module.exports = mongoose.model('User', schema)
+module.exports = mongoose.model('User', personSchema)

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
-const schema = mongoose.Schema({
+const assignmentSchema = new Schema({
     title: {
         type: String,
         required: true
@@ -17,10 +18,11 @@ const schema = mongoose.Schema({
     graded: Boolean,
     userScore: Number,
     totalPossible: Number
+    //student: [{ type: Schema.Types.ObjectId, ref: 'User' }]
 },
     { 
         timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } 
     }
 )
 
-module.exports = schema
+module.exports = assignmentSchema
