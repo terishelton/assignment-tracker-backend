@@ -3,7 +3,6 @@ const Schema = mongoose.Schema
 const Assignment = require('./assignment')
 
 const personSchema = Schema({
-    _id: Schema.Types.ObjectId,
     email: {
         type: String,
         required: true,
