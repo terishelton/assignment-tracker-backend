@@ -24,6 +24,12 @@ const personSchema = Schema({
         type: Boolean,
         required: true
     },
+    overallGrade: {
+        type: Number
+    },
+    overallGradeOutOf: {
+        type: Number
+    },
     assignment: [Assignment]
 },
     { 
