@@ -1,25 +1,30 @@
 const router = require('express').Router()
 const User = require('../models/user')
-const Assignment = require('../models/assignment')
+const Assignments = require('../models/assignment')
 const { isLoggedIn, isAdmin } = require('../middleware/auth')
 
 // get ungraded assignments
 router.get('/ungraded', isLoggedIn, isAdmin, async (req, res, next) => {
     const status = 200
-    const assignments = await User.find()
-        .where('assignment.graded').ne(false) // this part doesn't work
-        .select('-__v -password')
+    const response = await Assignments
+        .find()
+        .populate('student', 'firstName lastName email')
+        .select('title description link graded student')
+        .where('graded').equals(false)
 
-    // use population?
-    // https://mongoosejs.com/docs/populate.html
-    // this isn't set up right
-
-    res.json({ status, response: assignments })
+    res.json({ status, response })
 })
 
 // get graded assignments
 router.get('/graded', isLoggedIn, isAdmin, async (req, res, next) => {
-    // do something here
+    const status = 200
+    const response = await Assignments
+        .find()
+        .populate('student', 'firstName lastName')
+        .select('title description link graded student')
+        .where('graded').equals(true)
+
+    res.json({ status, response })
 })
 
 // patch/update grades

@@ -1,5 +1,7 @@
 const router = require('express').Router()
+const mongoose = require('mongoose')
 const User = require('../models/user')
+const Assignment = require('../models/assignment')
 const { isLoggedIn, isSameUser, isAdmin } = require('../middleware/auth')
 
 // get all students (not all users!)
@@ -21,14 +23,18 @@ router.get('/:studentId/assignments', isLoggedIn, isSameUser, async (req, res, n
 // create assignment
 router.post('/:studentId/assignment', isLoggedIn, isSameUser, async (req, res, next) => {
     const status = 201
-    const studentId = { _id: req.params.studentId }
-    const student = await User.findOne(studentId).select('-__v -password')
+    const assignment = await Assignment.create({
+        _id: new mongoose.Types.ObjectId(), 
+        title: req.body.title,
+        description: req.body.description,
+        link: req.body.link,
+        graded: false,
+        student: req.params.studentId
+    })
+
+    await assignment.save()
     
-    student.assignment.push(req.body)
-    await student.save()
-    
-    const newAssignment = student.assignment[student.assignment.length - 1]
-    res.json({ status, response: newAssignment })
+    res.json({ status, response: assignment })
 })
 
 // edit assignment

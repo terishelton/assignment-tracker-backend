@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
-const Assignment = require('./assignment')
 
 const personSchema = Schema({
+    _id: Schema.Types.ObjectId,
     email: {
         type: String,
         required: true,
@@ -30,7 +30,7 @@ const personSchema = Schema({
     overallGradeOutOf: {
         type: Number
     },
-    assignment: [Assignment]
+    assignment: [{ type: Schema.Types.ObjectId, ref: 'Assignment' }]
 },
     { 
         timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } 

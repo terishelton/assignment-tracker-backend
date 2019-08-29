@@ -1,5 +1,6 @@
 const router = require('express').Router()
 const bcrypt = require('bcrypt')
+const mongoose = require('mongoose')
 const User = require('../models/user')
 const { decodeToken, generateToken } = require('../lib/token')
 
@@ -7,7 +8,7 @@ const { decodeToken, generateToken } = require('../lib/token')
 router.post('/signup', async (req, res, next) => {
     const status = 201
     try {
-        const { email, password, firstName, lastName, admin } = req.body
+        const { email, password, firstName, lastName } = req.body
 
         const newUser = await User.findOne({ email })
         if (newUser) throw new Error(`User ${email} already exists.`)
@@ -15,11 +16,12 @@ router.post('/signup', async (req, res, next) => {
         const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(password, saltRounds)
         const user = await User.create({
+            _id: new mongoose.Types.ObjectId(),
             email,
             firstName,
             lastName,
             password: hashedPassword,
-            admin
+            admin: false
         })
         const token = generateToken(user._id)
         res.status(status).json({ status, token })
