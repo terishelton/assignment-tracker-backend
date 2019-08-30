@@ -47,7 +47,7 @@ router.patch('/:studentId/assignment/:assignmentId', isLoggedIn, isSameUser, asy
     // get the assignemnt
     const assignment = await Assignment.findOne({ _id: req.params.assignmentId })
 
-    // update the assignemnt
+    // update the assignment
     assignment.set(req.body)
     await assignment.save()
 

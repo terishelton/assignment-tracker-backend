@@ -28,8 +28,30 @@ router.get('/graded', isLoggedIn, isAdmin, async (req, res, next) => {
 })
 
 // patch/update grades
-router.patch('/', isLoggedIn, isAdmin, async (req, res, next) => {
-    // do something here
+router.patch('/grade/:assignmentId', isLoggedIn, isAdmin, async (req, res, next) => {
+    const status = 201
+
+    // get the assignemnt
+    const assignment = await Assignments
+        .findOne({ _id: req.params.assignmentId })
+        .populate('student', '_id')
+        .select('title description link graded userScore totalPossible student')
+
+    const student = await User.findOne({ _id: assignment.student[0]._id })
+
+    // update the assignment
+    assignment.graded = true
+    assignment.userScore = req.body.assignment.userScore
+    assignment.totalPossible = req.body.assignment.totalPossible
+    await assignment.save()
+
+    // update the student's overall score
+    student.overallGrade = parseInt(student.overallGrade) + parseInt(req.body.assignment.userScore)
+    student.overallGradePossible = parseInt(student.overallGradePossible) + parseInt(req.body.assignment.totalPossible)
+    await student.save()
+
+    // return updated assignment
+    res.json({ status, response: assignment })
 })
 
 module.exports = router
