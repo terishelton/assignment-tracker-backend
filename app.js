@@ -18,7 +18,7 @@ app.use(require('body-parser').json())
 
 // Set up CORS
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: CLIENT_BASE_URL, // http://localhost:3000
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }))
 
