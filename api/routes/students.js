@@ -14,9 +14,11 @@ router.get('/', isLoggedIn, async (req, res, next) => {
 // get all assignments for studentId
 router.get('/:studentId/assignments', isLoggedIn, isSameUser, async (req, res, next) => {
     const status = 200
-    const studentId = { _id: req.params.studentId }
-    const response = await User.findOne(studentId).select('assignment')
-
+    const response = await Assignment
+        .find()
+        .where('student').equals(req.params.studentId)
+        .select('title description link userScore totalPossible graded')
+    
     res.json({ status, response })
 })
 
@@ -33,48 +35,35 @@ router.post('/:studentId/assignment', isLoggedIn, isSameUser, async (req, res, n
     })
 
     await assignment.save()
-    
+
     res.json({ status, response: assignment })
 })
 
 // edit assignment
 router.patch('/:studentId/assignment/:assignmentId', isLoggedIn, isSameUser, async (req, res, next) => {
     const status = 201
-    const studentId = { _id: req.params.studentId }
-
-    // get the student
-    const student = await User.findOne(studentId).select('-__v -password')
+    //const studentId = { _id: req.params.studentId }
 
     // get the assignemnt
-    const assignment = student.assignment.id({ _id: req.params.assignmentId })
+    const assignment = await Assignment.findOne({ _id: req.params.assignmentId })
 
     // update the assignemnt
     assignment.set(req.body)
-    await student.save()
-
-    // get updated assignment
-    const updatedAssignment = student.assignment.id({ _id: req.params.assignmentId })
+    await assignment.save()
 
     // return updated assignment
-    res.json({ status, response: updatedAssignment })
+    res.json({ status, response: assignment })
 })
 
 // delete assignment
 router.delete('/:studentId/assignment/:assignmentId', isLoggedIn, isSameUser, async (req, res, next) => {
     const status = 200
-    const studentId = { _id: req.params.studentId }
-    const assignmentId = { _id: req.params.assignmentId }
-
-    // get the student
-    const student = await User.findOne(studentId).select('-__v -password')
-
-    // get the assignment
-    const assignment = student.assignment.id(assignmentId)
+    const assignment = await Assignment.findOne({ _id: req.params.assignmentId })
 
     assignment.remove()
-    await student.save()
+    await assignment.save()
 
-    res.json({ status, assignment })
+    res.json({ status, response: assignment })
 })
 
 module.exports = router

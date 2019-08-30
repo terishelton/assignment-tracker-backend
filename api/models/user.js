@@ -27,7 +27,7 @@ const personSchema = Schema({
     overallGrade: {
         type: Number
     },
-    overallGradeOutOf: {
+    overallGradePossible: {
         type: Number
     },
     assignment: [{ type: Schema.Types.ObjectId, ref: 'Assignment' }]
