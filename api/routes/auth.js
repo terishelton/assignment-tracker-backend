@@ -21,7 +21,9 @@ router.post('/signup', async (req, res, next) => {
             firstName,
             lastName,
             password: hashedPassword,
-            admin: false
+            admin: false,
+            overallGrade: 0,
+            overallGradePossible: 0
         })
         const token = generateToken(user._id)
         res.status(status).json({ status, token })
